@@ -37,13 +37,6 @@ body {
   background: rgba(255, 217, 61, 0.15);
   border: 1px solid rgba(255, 217, 61, 0.4);
 }
-.learn-btn {
-  font-size: 14px; font-weight: bold; color: #fff;
-  padding: 8px 16px; border-radius: 20px;
-  background: linear-gradient(135deg, #7c6aff, #5d4fd6);
-  border: none; cursor: pointer; transition: all 0.25s;
-}
-.learn-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(124,106,255,0.5); }
 .author-signature {
   font-size: 15px; color: #aaa; padding: 6px 14px;
   border: 1px solid rgba(124, 106, 255, 0.5); border-radius: 20px;
@@ -95,6 +88,81 @@ body {
 }
 .author-block b { color: #fff; font-size: 16px; letter-spacing: 1px; }
 
+/* ОБУЧЕНИЕ НА ГЛАВНОЙ */
+.learn-strip {
+  margin-top: 30px;
+  padding: 20px;
+  background: rgba(124, 106, 255, 0.08);
+  border: 2px solid rgba(124, 106, 255, 0.3);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 700px;
+}
+.learn-strip-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #7c6aff;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.learn-strip-sub {
+  font-size: 13px;
+  color: #aaa;
+  margin-bottom: 15px;
+}
+.learn-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+.learn-chip {
+  padding: 10px 16px;
+  border-radius: 25px;
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(124, 106, 255, 0.4);
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.25s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.learn-chip:hover {
+  background: rgba(124, 106, 255, 0.3);
+  border-color: #7c6aff;
+  transform: translateY(-3px);
+}
+.learn-chip.active {
+  background: linear-gradient(135deg, #7c6aff, #5d4fd6);
+  border-color: #7c6aff;
+}
+.fact-display {
+  margin-top: 15px;
+  padding: 18px;
+  background: rgba(0,0,0,0.25);
+  border-radius: 15px;
+  min-height: 80px;
+  font-size: 14px;
+  color: #ccc;
+  line-height: 1.6;
+  text-align: left;
+  display: none;
+}
+.fact-display.show { display: block; animation: fadeIn 0.3s ease; }
+.fact-display-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffd93d;
+  margin-bottom: 8px;
+}
+
+/* КАРТА */
 .map-grid {
   display: grid; grid-template-columns: repeat(2, 1fr);
   gap: 20px; max-width: 600px; margin: 0 auto 30px;
@@ -248,51 +316,22 @@ body {
 .dot-yellow { background: #ffd93d; }
 .dot-gray { background: #666; }
 
-/* ОБУЧЕНИЕ */
-.learn-screen {
-  max-width: 700px; margin: 0 auto; width: 100%;
+/* БАГ В КОДЕ */
+.code-block {
+  background: rgba(0,0,0,0.5); border-radius: 15px;
+  padding: 20px; margin: 0 auto 20px; max-width: 500px;
+  border: 2px solid rgba(124,106,255,0.4);
+  text-align: left; font-family: 'Consolas', monospace;
 }
-.learn-title {
-  font-size: 32px; margin-bottom: 10px;
-  background: linear-gradient(135deg, #7c6aff, #ff6ac1);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
+.code-line {
+  padding: 10px 15px; margin: 5px 0; border-radius: 8px;
+  background: rgba(124,106,255,0.15); font-size: 15px;
+  cursor: pointer; transition: all 0.2s;
+  border: 2px solid transparent;
 }
-.learn-subtitle { color: #aaa; margin-bottom: 25px; font-size: 15px; }
-
-.fact-card {
-  background: rgba(124, 106, 255, 0.1);
-  border: 2px solid rgba(124, 106, 255, 0.4);
-  border-radius: 15px;
-  padding: 15px 20px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  transition: all 0.25s;
-  text-align: left;
-}
-.fact-card:hover {
-  background: rgba(124, 106, 255, 0.2);
-  border-color: #7c6aff;
-  transform: translateX(5px);
-}
-.fact-head {
-  display: flex; align-items: center; gap: 12px;
-  font-size: 16px; font-weight: bold;
-}
-.fact-emoji { font-size: 24px; }
-.fact-body {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  font-size: 14px;
-  color: #ccc;
-  line-height: 1.6;
-  display: none;
-}
-.fact-card.open .fact-body { display: block; animation: fadeIn 0.3s ease; }
-.fact-card.open { background: rgba(124, 106, 255, 0.25); }
-.fact-arrow { margin-left: auto; transition: transform 0.3s; }
-.fact-card.open .fact-arrow { transform: rotate(180deg); }
+.code-line:hover { background: rgba(124,106,255,0.3); border-color: #7c6aff; }
+.code-line.correct { background: rgba(46,204,113,0.3); border-color: #2ecc71; }
+.code-line.wrong { background: rgba(231,76,60,0.3); border-color: #e74c3c; }
 
 .site-footer {
   text-align: center; padding: 15px; font-size: 13px; color: #666;
@@ -308,7 +347,6 @@ body {
   .logo { font-size: 18px; }
   .author-signature { font-size: 12px; padding: 4px 10px; }
   .score-display { font-size: 13px; padding: 4px 10px; }
-  .learn-btn { font-size: 12px; padding: 6px 12px; }
   .map-grid { grid-template-columns: 1fr; }
   .level-icon { font-size: 36px; }
   .robot-face { font-size: 60px; }
@@ -316,6 +354,7 @@ body {
   .cell { width: 45px; height: 45px; font-size: 20px; }
   .code-input-box { width: 48px; height: 58px; font-size: 24px; }
   .attempt-digit { width: 36px; height: 36px; font-size: 18px; }
+  .learn-chip { font-size: 12px; padding: 8px 12px; }
 }
 </style>
 </head>
@@ -328,7 +367,6 @@ body {
   </div>
   <div class="header-right">
     <div class="score-display" id="header-score">⭐ 0</div>
-    <button class="learn-btn" onclick="openLearn()">📘 Обучение</button>
     <div class="author-signature">by <b>Dask</b></div>
   </div>
 </header>
@@ -345,6 +383,18 @@ body {
     <button class="btn btn-easy" onclick="startGame('easy')">🟢 Лёгкий<br><small>7–10 лет</small></button>
     <button class="btn btn-hard" onclick="startGame('hard')">🔴 Сложный<br><small>11–14 лет</small></button>
   </div>
+
+  <!-- ОБУЧЕНИЕ НА ГЛАВНОЙ -->
+  <div class="learn-strip">
+    <div class="learn-strip-title">📘 Обучение — IT-факты</div>
+    <p class="learn-strip-sub">Нажми на любую тему — узнаешь что-то новое об IT</p>
+    <div class="learn-chips" id="learn-chips"></div>
+    <div class="fact-display" id="fact-display">
+      <div class="fact-display-title" id="fact-title"></div>
+      <div id="fact-text"></div>
+    </div>
+  </div>
+
   <div class="author-block">
     <p>Автор проекта: <b>Егорова Дарья</b></p>
   </div>
@@ -370,10 +420,10 @@ body {
       <div class="level-name">Взломщик</div>
       <div class="level-status" id="status-3">Доступно</div>
     </div>
-    <div class="map-level locked" id="lvl-4" onclick="openLevel(4)">
+    <div class="map-level" id="lvl-4" onclick="openLevel(4)">
       <div class="level-icon">🐛</div>
       <div class="level-name">Баг в коде</div>
-      <div class="level-status" id="status-4">🔒 Скоро</div>
+      <div class="level-status" id="status-4">Доступно</div>
     </div>
   </div>
   <button class="btn btn-back" onclick="backToStart()">← На главную</button>
@@ -457,19 +507,24 @@ body {
   </div>
 
   <div class="game-message" id="hacker-message"></div>
-
   <div class="attempts-list" id="hacker-attempts"></div>
 </main>
 
-<!-- ЭКРАН 6: ОБУЧЕНИЕ -->
-<main class="screen" id="screen-learn">
-  <div class="learn-screen">
-    <h1 class="learn-title">📘 Обучение</h1>
-    <p class="learn-subtitle">Короткие факты об IT — простыми словами. Нажми на карточку, чтобы раскрыть.</p>
+<!-- ЭКРАН 6: БАГ В КОДЕ -->
+<main class="screen" id="screen-bug">
+  <div class="game-header">
+    <h2>🐛 Баг в коде</h2>
+    <div class="game-progress" id="bug-progress">Баг 1 из 3</div>
+  </div>
+  <p class="game-desc">Робот выполнил программу неправильно. Найди строку с ошибкой!</p>
 
-    <div id="facts-list"></div>
+  <p id="bug-task" class="game-desc"></p>
+  <div class="code-block" id="bug-code"></div>
 
-    <button class="btn btn-back" onclick="backToStart()">← На главную</button>
+  <div class="game-message" id="bug-message"></div>
+
+  <div class="game-buttons">
+    <button class="btn btn-back" onclick="backToMap()">← На карту</button>
   </div>
 </main>
 
@@ -483,77 +538,73 @@ body {
 const game = {
   difficulty: 'easy',
   score: 0,
-  unlockedLevels: 3,
+  unlockedLevels: 4,
   completedLevels: [],
 };
 
 const facts = [
   { emoji: '🧠', title: 'Что такое процессор?',
-    text: 'Процессор — это «мозг» компьютера. Он выполняет все команды: считает, сравнивает, решает. Чем быстрее процессор, тем быстрее работает компьютер. У современных процессоров миллиарды транзисторов внутри!' },
+    text: 'Процессор — это «мозг» компьютера. Он выполняет все команды: считает, сравнивает, решает. Чем быстрее процессор, тем быстрее работает компьютер.' },
   { emoji: '💾', title: 'Что такое оперативная память?',
-    text: 'Оперативная память (RAM) — это «черновик» компьютера. В ней хранятся данные, с которыми он работает прямо сейчас. Когда ты выключаешь компьютер, оперативная память очищается. Поэтому файлы сохраняют на диск!' },
+    text: 'Оперативная память (RAM) — «черновик» компьютера. В ней хранятся данные, с которыми он работает прямо сейчас. При выключении она очищается.' },
   { emoji: '💽', title: 'Чем отличается HDD от SSD?',
-    text: 'HDD — старый жёсткий диск с вращающимися пластинами. SSD — современный, без движущихся частей. SSD работает в 5–10 раз быстрее и не боится тряски. Поэтому новые ноутбуки обычно на SSD.' },
+    text: 'HDD — старый жёсткий диск с вращающимися пластинами. SSD — современный, без движущихся частей, работает в 5–10 раз быстрее.' },
   { emoji: '🖥️', title: 'Что такое операционная система?',
-    text: 'Операционная система (Windows, macOS, Linux, Android, iOS) — это «начальник» компьютера. Она управляет всеми программами, файлами и устройствами. Без неё компьютер не знал бы, что делать.' },
+    text: 'ОС (Windows, macOS, Linux, Android, iOS) — «начальник» компьютера. Она управляет всеми программами, файлами и устройствами.' },
   { emoji: '🧭', title: 'Что такое алгоритм?',
-    text: 'Алгоритм — это чёткая последовательность шагов для решения задачи. Например, рецепт бутерброда — это алгоритм. В программировании алгоритмы помогают компьютеру решать задачи шаг за шагом.' },
+    text: 'Алгоритм — чёткая последовательность шагов для решения задачи. Например, рецепт бутерброда — это алгоритм.' },
   { emoji: '🔁', title: 'Что такое цикл?',
-    text: 'Цикл — это повторение одних и тех же действий. Например, «повтори 10 раз: шаг вперёд». Вместо того чтобы писать 10 одинаковых команд, программист пишет одну с циклом. Это экономит время и код.' },
+    text: 'Цикл — повторение действий. Например, «повтори 10 раз: шаг вперёд». Вместо 10 команд программист пишет одну с циклом.' },
   { emoji: '❓', title: 'Что такое условие «если»?',
-    text: 'Условие — это проверка: «если идёт дождь, возьми зонт». В программировании так же: «если счёт больше 10, скажи победа». Компьютер проверяет условие и выбирает, что делать дальше.' },
+    text: 'Условие — проверка: «если идёт дождь, возьми зонт». В программировании так же: компьютер проверяет условие и выбирает действие.' },
   { emoji: '🐛', title: 'Что такое баг?',
-    text: 'Баг — это ошибка в программе. Название появилось в 1947 году, когда в компьютер попал настоящий мотылёк (bug — «жук» по-английски). Программисты ищут баги и исправляют их — это называется «отладка».' },
+    text: 'Баг — ошибка в программе. Название появилось в 1947 году, когда в компьютер попал настоящий мотылёк. Программисты ищут баги и исправляют их.' },
   { emoji: '🔐', title: 'Что такое надёжный пароль?',
-    text: 'Надёжный пароль — длинный (12+ символов), с буквами разного регистра, цифрами и знаками. Не используй дату рождения или «123456». И не повторяй один пароль на разных сайтах!' },
+    text: 'Надёжный пароль — длинный (12+ символов), с буквами разного регистра, цифрами и знаками. Не используй дату рождения и «123456».' },
   { emoji: '🎣', title: 'Что такое фишинг?',
-    text: 'Фишинг — это обман, когда мошенники притворяются знакомыми или компаниями и выманивают пароли и деньги. Например, письмо «Ваш аккаунт заблокирован, перейдите по ссылке». Настоящие компании так не делают!' },
+    text: 'Фишинг — обман, когда мошенники выманивают пароли и деньги. Например, письмо «Ваш аккаунт заблокирован, перейдите по ссылке».' },
   { emoji: '🔥', title: 'Что такое файрвол?',
-    text: 'Файрвол (firewall) — это «стена» между твоим компьютером и интернетом. Он проверяет все данные и блокирует подозрительные. Как охранник на входе в школу: пропускает своих, останавливает чужих.' },
+    text: 'Файрвол — «стена» между компьютером и интернетом. Он проверяет все данные и блокирует подозрительные. Как охранник на входе в школу.' },
   { emoji: '🛡️', title: 'Что такое антивирус?',
-    text: 'Антивирус — это программа, которая ищет и удаляет вирусы. Вирусы — вредоносные программы, которые могут украсть данные или сломать компьютер. Антивирус регулярно обновляется, чтобы ловить новые угрозы.' },
+    text: 'Антивирус ищет и удаляет вирусы. Вирусы — вредоносные программы, которые могут украсть данные или сломать компьютер.' },
   { emoji: '💾', title: 'Что такое бэкап?',
-    text: 'Бэкап — это резервная копия. Если файлы потеряются (вирус, поломка, случайное удаление), их можно восстановить из бэкапа. Важные данные всегда стоит копировать на флешку или в облако.' },
+    text: 'Бэкап — резервная копия. Если файлы потеряются (вирус, поломка), их можно восстановить из бэкапа. Важные данные копируй на флешку или в облако.' },
   { emoji: '🌐', title: 'Что такое интернет?',
-    text: 'Интернет — это огромная сеть из миллионов компьютеров по всему миру, соединённых кабелями и спутниками. Когда ты открываешь сайт, твой компьютер отправляет запрос через много узлов и получает ответ за доли секунды!' },
+    text: 'Интернет — сеть из миллионов компьютеров по всему миру, соединённых кабелями и спутниками. Твой запрос доходит до сайта за доли секунды!' },
 ];
 
+// ===== ОБУЧЕНИЕ =====
+function renderLearnChips() {
+  const chips = document.getElementById('learn-chips');
+  chips.innerHTML = facts.map((f, i) =>
+    `<div class="learn-chip" data-i="${i}" onclick="showFact(${i})">
+      <span>${f.emoji}</span> ${f.title.replace('Что такое ', '').replace('?', '')}
+    </div>`
+  ).join('');
+}
+
+function showFact(i) {
+  const f = facts[i];
+  document.querySelectorAll('.learn-chip').forEach(c => c.classList.remove('active'));
+  document.querySelector(`.learn-chip[data-i="${i}"]`).classList.add('active');
+
+  const disp = document.getElementById('fact-display');
+  document.getElementById('fact-title').textContent = f.emoji + ' ' + f.title;
+  document.getElementById('fact-text').textContent = f.text;
+  disp.classList.add('show');
+}
+
+// ===== ЭКРАНЫ =====
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
 }
 
-function openLearn() {
-  renderFacts();
-  showScreen('screen-learn');
-}
-
-function renderFacts() {
-  const list = document.getElementById('facts-list');
-  if (list.dataset.rendered) return;
-  list.innerHTML = facts.map((f, i) =>
-    `<div class="fact-card" onclick="toggleFact(${i})">
-      <div class="fact-head">
-        <span class="fact-emoji">${f.emoji}</span>
-        <span>${f.title}</span>
-        <span class="fact-arrow">▼</span>
-      </div>
-      <div class="fact-body">${f.text}</div>
-    </div>`
-  ).join('');
-  list.dataset.rendered = '1';
-}
-
-function toggleFact(i) {
-  const cards = document.querySelectorAll('.fact-card');
-  cards[i].classList.toggle('open');
-}
-
 function startGame(diff) {
   game.difficulty = diff;
   game.score = 0;
-  game.unlockedLevels = 3;
+  game.unlockedLevels = 4;
   game.completedLevels = [];
   updateScore();
   updateMap();
@@ -576,12 +627,6 @@ function updateMap() {
     const status = document.getElementById('status-' + i);
     lvl.classList.remove('locked', 'done');
 
-    if (i === 4) {
-      lvl.classList.add('locked');
-      status.textContent = '🔒 Скоро';
-      continue;
-    }
-
     if (game.completedLevels.includes(i)) {
       lvl.classList.add('done');
       status.textContent = '✓ Пройдено';
@@ -599,6 +644,7 @@ function openLevel(n) {
   if (n === 1) startRobotGame();
   else if (n === 2) startCourierGame();
   else if (n === 3) startHackerGame();
+  else if (n === 4) startBugGame();
 }
 
 // ===== ИГРА 1: РЕМОНТ РОБОТА =====
@@ -1043,10 +1089,96 @@ function setHackerMessage(text, type) {
   el.className = 'game-message ' + (type || '');
 }
 
+// ===== ИГРА 4: БАГ В КОДЕ =====
+let bug = { round: 1, totalRounds: 1 };
+
+function startBugGame() {
+  bug.round = 1;
+  bug.totalRounds = game.difficulty === 'easy' ? 1 : 3;
+  loadBugRound();
+  showScreen('screen-bug');
+}
+
+function loadBugRound() {
+  document.getElementById('bug-progress').textContent =
+    `Баг ${bug.round} из ${bug.totalRounds}`;
+
+  let task, lines, bugIndex;
+
+  if (bug.round === 1 || game.difficulty === 'easy') {
+    task = '🤖 Робот должен дойти до 🎯 цели и сказать «Готово!». Где ошибка?';
+    lines = [
+      'шаг вперёд',
+      'шаг вперёд',
+      'поверни налево',
+      'шаг вперёд',
+      'скажи «Готово!»'
+    ];
+    bugIndex = 2;
+  } else if (bug.round === 2) {
+    task = '🤖 Робот должен посчитать от 1 до 3. Где ошибка?';
+    lines = [
+      'счёт = 0',
+      'пока счёт < 3:',
+      '   счёт = счёт + 1',
+      '   скажи счёт',
+      'скажи «Готово!»'
+    ];
+    bugIndex = 3;
+  } else {
+    task = '🤖 Робот должен идти, пока не встретит стену. Где ошибка?';
+    lines = [
+      'пока впереди стена:',
+      '   шаг вперёд',
+      'скажи «Стена!»'
+    ];
+    bugIndex = 0;
+  }
+
+  bug.bugIndex = bugIndex;
+  document.getElementById('bug-task').textContent = task;
+  document.getElementById('bug-code').innerHTML = lines.map((line, i) =>
+    `<div class="code-line" data-i="${i}" onclick="chooseBugLine(${i})">${line}</div>`
+  ).join('');
+
+  setBugMessage('', '');
+}
+
+function chooseBugLine(i) {
+  const line = document.querySelector(`.code-line[data-i="${i}"]`);
+  if (line.classList.contains('correct') || line.classList.contains('wrong')) return;
+
+  if (i === bug.bugIndex) {
+    line.classList.add('correct');
+    const points = game.difficulty === 'easy' ? 10 : 15;
+    game.score += points;
+    updateScore();
+    setBugMessage(`✅ Правильно! +${points} очков`, 'ok');
+
+    setTimeout(() => {
+      if (bug.round < bug.totalRounds) {
+        bug.round++;
+        loadBugRound();
+      } else {
+        finishLevel(4);
+      }
+    }, 1800);
+  } else {
+    line.classList.add('wrong');
+    setBugMessage('❌ Это правильная строка. Ищи другую.', 'err');
+  }
+}
+
+function setBugMessage(text, type) {
+  const el = document.getElementById('bug-message');
+  el.textContent = text;
+  el.className = 'game-message ' + (type || '');
+}
+
 // ===== ОБЩЕЕ =====
 function finishLevel(n) {
   if (!game.completedLevels.includes(n)) game.completedLevels.push(n);
-  if (game.unlockedLevels < n + 1 && n < 3) game.unlockedLevels = n + 1;
+  if (game.unlockedLevels < n + 1 && n < 4) game.unlockedLevels = n + 1;
   updateMap();
   setTimeout(() => showScreen('screen-map'), 1500);
 }
@@ -1059,6 +1191,9 @@ function shuffle(a) {
   }
   return arr;
 }
+
+// Инициализация
+renderLearnChips();
 
 console.log('%c DaskQuest %c by Dask ',
   'background:#7c6aff;color:#fff;font-weight:bold;padding:4px 8px;border-radius:4px 0 0 4px;',
