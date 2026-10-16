@@ -1,2 +1,2 @@
-# daskquest.github.io
-Сайт-игра DaskQuest для детей
+DaskQuest
+Игра для маленьких IT специалистов 
