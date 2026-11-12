@@ -36,6 +36,31 @@ body {
 }
 .author-signature b { color: #7c6aff; font-style: italic; font-size: 16px; }
 
+/* МОДАЛЬНОЕ ОКНО (КАК ИГРАТЬ) */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+  display: flex; justify-content: center; align-items: center;
+  z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.modal-overlay.show { opacity: 1; pointer-events: auto; }
+.modal-content {
+  background: #24243e; border: 2px solid #7c6aff;
+  border-radius: 20px; padding: 30px; max-width: 500px; width: 90%;
+  text-align: left; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  transform: translateY(20px); transition: transform 0.3s;
+}
+.modal-overlay.show .modal-content { transform: translateY(0); }
+.modal-close {
+  position: absolute; top: 15px; right: 15px;
+  background: none; border: none; color: #aaa; font-size: 24px; cursor: pointer;
+}
+.modal-close:hover { color: #fff; }
+.modal-title { font-size: 22px; color: #7c6aff; margin-bottom: 15px; font-weight: bold; }
+.modal-text { font-size: 15px; color: #ccc; line-height: 1.6; margin-bottom: 10px; }
+.modal-text ul { margin-left: 20px; margin-top: 5px; }
+.modal-text li { margin-bottom: 5px; }
+
 .screen {
   display: none; flex: 1; padding: 30px 20px;
   max-width: 900px; width: 100%; margin: 0 auto; text-align: center;
@@ -70,6 +95,8 @@ body {
 .btn:active { transform: translateY(-2px) scale(0.98); }
 .btn-run { background: linear-gradient(135deg, #7c6aff, #5d4fd6); box-shadow: 0 6px 20px rgba(124,106,255,0.4); }
 .btn-run:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(124,106,255,0.6); }
+.btn-help { background: linear-gradient(135deg, #ffd93d, #f39c12); color: #000; box-shadow: 0 6px 20px rgba(255,217,61,0.4); }
+.btn-help:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(255,217,61,0.6); }
 
 .difficulty-choice { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
 
@@ -240,7 +267,7 @@ body {
 .dot-yellow { background: #ffd93d; }
 .dot-gray { background: #666; }
 
-/* БАГ (ОБНОВЛЕННЫЙ) */
+/* БАГ (С ВИЗУАЛОМ И СТРЕЛКОЙ) */
 .bug-visual {
   display: grid; grid-template-columns: repeat(3, 60px);
   gap: 5px; justify-content: center; margin: 20px auto;
@@ -251,10 +278,18 @@ body {
   width: 60px; height: 60px; border-radius: 10px;
   background: rgba(255,255,255,0.08); display: flex;
   align-items: center; justify-content: center; font-size: 28px;
+  position: relative;
 }
 .bug-cell.wall { background: rgba(100,100,100,0.4); border: 1px solid #666; }
 .bug-cell.goal { background: rgba(255,217,61,0.2); border: 1px solid #ffd93d; }
 .bug-cell.robot { background: rgba(46,204,113,0.3); border: 1px solid #2ecc71; }
+
+/* Стрелочка направления робота */
+.bug-cell.robot::after {
+  content: '⬆️'; position: absolute; top: -10px; font-size: 20px;
+}
+.bug-cell.robot.dir-right::after { content: '➡️'; top: 50%; right: -15px; transform: translateY(-50%); }
+.bug-cell.robot.dir-left::after { content: '⬅️'; top: 50%; left: -15px; transform: translateY(-50%); }
 
 .bug-hint {
   font-size: 14px; color: #ffd93d; margin-bottom: 15px;
@@ -357,10 +392,20 @@ body {
   .cipher-text { font-size: 20px; letter-spacing: 3px; }
   .bug-visual { grid-template-columns: repeat(3, 45px); }
   .bug-cell { width: 45px; height: 45px; font-size: 20px; }
+  .modal-content { padding: 20px; }
 }
 </style>
 </head>
 <body>
+
+<!-- УНИВЕРСАЛЬНОЕ МОДАЛЬНОЕ ОКНО -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-title" id="modal-title">Как играть</div>
+    <div class="modal-text" id="modal-text"></div>
+  </div>
+</div>
 
 <header class="site-header">
   <div class="logo">
@@ -402,12 +447,19 @@ body {
 
 <!-- ИГРА 1 -->
 <main class="screen" id="screen-robot">
-  <div class="game-header"><h2>🔧 Ремонт робота Робика</h2><div class="game-progress" id="robot-progress">Раунд 1 из 3</div></div>
+  <div class="game-header">
+    <h2>🔧 Ремонт робота Робика</h2>
+    <div class="game-progress" id="robot-progress">Раунд 1 из 3</div>
+  </div>
   <p id="robot-desc" class="game-desc">Нажми на деталь, чтобы поставить её в нужный слот.</p>
   <div class="robot-area"><div class="robot-face" id="robot-face">🤖</div><div class="slots" id="robot-slots"></div></div>
   <div class="parts" id="robot-parts"></div>
   <div class="game-message" id="robot-message"></div>
-  <div class="game-buttons"><button class="btn" onclick="checkRobot()">✓ Проверить</button><button class="btn btn-back" onclick="backToMap()">← На карту</button></div>
+  <div class="game-buttons">
+    <button class="btn btn-help" onclick="showHelp('Ремонт', 'В этой игре тебе нужно собрать компьютер.<br><br>1. Нажимай на детали снизу.<br>2. Они будут вставать в нужные слоты.<br>3. Если поставил не туда — нажми на слот, чтобы убрать.<br>4. Собери все детали и нажми «Проверить».')">❓ Как играть</button>
+    <button class="btn" onclick="checkRobot()">✓ Проверить</button>
+    <button class="btn btn-back" onclick="backToMap()">← На карту</button>
+  </div>
 </main>
 
 <!-- ИГРА 2 -->
@@ -421,7 +473,12 @@ body {
     <button class="cmd-btn" onclick="addCmd('left')">⬅</button><button class="cmd-btn" onclick="addCmd('right')">➡</button>
   </div>
   <div class="game-message" id="courier-message"></div>
-  <div class="game-buttons"><button class="btn btn-run" onclick="runProgram()">▶ Запуск</button><button class="btn btn-back" onclick="resetProgram()">↺ Сброс</button><button class="btn btn-back" onclick="backToMap()">← На карту</button></div>
+  <div class="game-buttons">
+    <button class="btn btn-help" onclick="showHelp('Курьер', 'Помоги роботу дойти до флажка 🎯.<br><br>1. Нажимай на стрелки, чтобы добавить команды.<br>2. Они появятся в списке «Программа».<br>3. Когда программа готова — нажми «Запуск».<br>4. Если робот врезался в стену 🧱, нажми «Сброс» и попробуй снова.')">❓ Как играть</button>
+    <button class="btn btn-run" onclick="runProgram()">▶ Запуск</button>
+    <button class="btn btn-back" onclick="resetProgram()">↺ Сброс</button>
+    <button class="btn btn-back" onclick="backToMap()">← На карту</button>
+  </div>
 </main>
 
 <!-- ИГРА 3 -->
@@ -435,26 +492,25 @@ body {
     <input class="code-input-box" maxlength="1" inputmode="numeric" data-i="2">
     <input class="code-input-box" maxlength="1" inputmode="numeric" data-i="3">
   </div>
-  <div class="game-buttons"><button class="btn btn-run" onclick="checkHackerCode()">🔍 Проверить</button><button class="btn btn-back" onclick="backToMap()">← На карту</button></div>
+  <div class="game-buttons">
+    <button class="btn btn-help" onclick="showHelp('Взломщик', 'Угадай секретный код из 4 цифр.<br><br>1. Введи 4 цифры и нажми «Проверить».<br>2. После проверки ты увидишь цвета:<br>🟢 Зелёный — цифра на своём месте.<br>🟡 Жёлтый — цифра есть, но не там.<br>⚪ Серый — цифры нет в коде.<br>3. У тебя есть несколько попыток. Удачи!')">❓ Как играть</button>
+    <button class="btn btn-run" onclick="checkHackerCode()">🔍 Проверить</button>
+    <button class="btn btn-back" onclick="backToMap()">← На карту</button>
+  </div>
   <div class="game-message" id="hacker-message"></div>
   <div class="attempts-list" id="hacker-attempts"></div>
 </main>
 
-<!-- ИГРА 4 (ОБНОВЛЕННАЯ) -->
+<!-- ИГРА 4 -->
 <main class="screen" id="screen-bug">
   <div class="game-header"><h2>🐛 Баг в коде</h2><div class="game-progress" id="bug-progress">Баг 1 из 1</div></div>
   <p class="game-desc">Робот выполнил программу неправильно. Найди строку с ошибкой!</p>
-  
-  <!-- Визуальная карта -->
   <div class="bug-visual" id="bug-visual"></div>
-
-  <!-- Подсказка -->
-  <div class="bug-hint" id="bug-hint">Задача: Робот должен дойти до цели 🎯 и сказать «Готово!».</div>
-  
+  <div class="bug-hint" id="bug-hint"></div>
   <div class="code-block" id="bug-code"></div>
   <div class="game-message" id="bug-message"></div>
   <div class="game-buttons">
-    <button class="btn btn-back" onclick="showBugHelp()">❓ Как играть</button>
+    <button class="btn btn-help" onclick="showHelp('Баг в коде', 'Робот выполняет код сверху вниз.<br><br>1. Посмотри на карту. Там есть робот (со стрелкой направления) 🤖, стены 🧱 и цель 🎯.<br>2. Прочитай подсказку под картой — что пошло не так.<br>3. Найди в коде строку, из-за которой робот ошибся.<br>4. Нажми на неё!')">❓ Как играть</button>
     <button class="btn btn-back" onclick="backToMap()">← На карту</button>
   </div>
 </main>
@@ -465,7 +521,11 @@ body {
   <p class="game-desc">Собери цифры по порядку от 1 до 8!</p>
   <div class="puzzle-grid" id="puzzle-grid"></div>
   <div class="game-message" id="puzzle-message"></div>
-  <div class="game-buttons"><button class="btn btn-back" onclick="startPuzzleGame()">↺ Сброс</button><button class="btn btn-back" onclick="backToMap()">← На карту</button></div>
+  <div class="game-buttons">
+    <button class="btn btn-help" onclick="showHelp('Пятнашки', 'Классическая головоломка.<br><br>1. У тебя есть поле 3x3.<br>2. Одна клетка пустая.<br>3. Нажимай на фишки рядом с пустой клеткой, чтобы двигать их.<br>4. Собери все цифры по порядку (от 1 до 8) в верхнем левом углу.')">❓ Как играть</button>
+    <button class="btn btn-back" onclick="startPuzzleGame()">↺ Сброс</button>
+    <button class="btn btn-back" onclick="backToMap()">← На карту</button>
+  </div>
 </main>
 
 <!-- ИГРА 6 -->
@@ -474,22 +534,40 @@ body {
   <p class="game-desc">Найди все пары одинаковых IT-эмодзи.</p>
   <div class="memory-grid" id="memory-grid"></div>
   <div class="game-message" id="memory-message"></div>
-  <div class="game-buttons"><button class="btn btn-back" onclick="startMemoryGame()">↺ Сброс</button><button class="btn btn-back" onclick="backToMap()">← На карту</button></div>
+  <div class="game-buttons">
+    <button class="btn btn-help" onclick="showHelp('Найди пару', 'Игра на тренировку памяти.<br><br>1. Нажимай на карточки, чтобы перевернуть их.<br>2. Запоминай, где какой эмодзи.<br>3. Найди две одинаковые карточки подряд — они исчезнут.<br>4. Собери все пары!')">❓ Как играть</button>
+    <button class="btn btn-back" onclick="startMemoryGame()">↺ Сброс</button>
+    <button class="btn btn-back" onclick="backToMap()">← На карту</button>
+  </div>
 </main>
 
 <!-- ИГРА 7 -->
 <main class="screen" id="screen-cipher">
   <div class="game-header"><h2>🔤 Расшифруй слово</h2><div class="game-progress" id="cipher-progress">Шифр 1 из 3</div></div>
-  <p class="game-desc" id="cipher-desc">Каждая буква сдвинута на 1 шаг вперёд по алфавиту.</p>
+  <p class="game-desc">Каждая буква сдвинута на 1 шаг вперёд по алфавиту.</p>
   <div class="cipher-text" id="cipher-text"></div>
   <input type="text" class="cipher-input" id="cipher-input" placeholder="Введи слово">
   <div class="game-message" id="cipher-message"></div>
-  <div class="game-buttons"><button class="btn btn-run" onclick="checkCipher()">✓ Проверить</button><button class="btn btn-back" onclick="backToMap()">← На карту</button></div>
+  <div class="game-buttons">
+    <button class="btn btn-help" onclick="showHelp('Шифр', 'Это шифр Цезаря.<br><br>Каждая буква в зашифрованном слове сдвинута на 1 шаг ВПЕРЁД.<br><br>Пример: если зашифровано «ВБКУ», то:<br>В → на шаг назад → Б<br>Б → на шаг назад → А<br>К → на шаг назад → Й<br>У → на шаг назад → Т<br>Получается слово «БАЙТ».<br><br>Введи правильное слово и нажми «Проверить»!')">❓ Как играть</button>
+    <button class="btn btn-run" onclick="checkCipher()">✓ Проверить</button>
+    <button class="btn btn-back" onclick="backToMap()">← На карту</button>
+  </div>
 </main>
 
 <footer class="site-footer"><span class="signature">DaskQuest</span> · © 2026 — Егорова Дарья</footer>
 
 <script>
+// Модальное окно
+function showHelp(title, text) {
+  document.getElementById('modal-title').textContent = '❓ ' + title;
+  document.getElementById('modal-text').innerHTML = text;
+  document.getElementById('modal-overlay').classList.add('show');
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('show');
+}
+
 const game = { difficulty: 'easy', score: 0, unlockedLevels: 7, completedLevels: [] };
 const quizData = [
   { q: 'Для чего нужен процессор?', o: ['Для хранения фото', 'Для вычислений (мозг ПК)', 'Для вывода звука'], a: 1, fact: 'Процессор выполняет все вычисления в компьютере.' },
@@ -671,7 +749,7 @@ function checkHackerCode() {
 function renderHackerAttempts() { document.getElementById('hacker-attempts').innerHTML = hacker.attempts.map(att => `<div class="attempt-row">${att.guess.map((d, i) => `<div class="attempt-digit ${att.result[i]}">${d}</div>`).join('')}</div>`).join(''); }
 function setHackerMessage(text, type) { const el = document.getElementById('hacker-message'); el.textContent = text; el.className = 'game-message ' + (type || ''); }
 
-// ===== 4. БАГ (НОВЫЙ) =====
+// ===== 4. БАГ (ОБНОВЛЕННЫЙ) =====
 let bug = { round: 1, totalRounds: 3 };
 function startBugGame() { bug.round = 1; bug.totalRounds = game.difficulty === 'easy' ? 1 : 3; loadBugRound(); showScreen('screen-bug'); }
 
@@ -680,7 +758,7 @@ function loadBugRound() {
   let lines, bugIndex, visualHTML, hintText;
 
   if (bug.round === 1) {
-    hintText = 'Робот должен дойти до 🎯. Он шагнул вперёд и повернул НЕ ТУДА, поэтому врезался в стену.';
+    hintText = 'Робот смотрит вверх ⬆️. Цель 🎯 находится справа. Робот повернул налево и врезался. Какая команда должна быть вместо «поверни налево»?';
     visualHTML = `
       <div class="bug-cell"></div><div class="bug-cell goal">🎯</div><div class="bug-cell wall">🧱</div>
       <div class="bug-cell"></div><div class="bug-cell"></div><div class="bug-cell wall">🧱</div>
@@ -719,7 +797,6 @@ function chooseBugLine(i) {
     setTimeout(() => { if (bug.round < bug.totalRounds) { bug.round++; loadBugRound(); } else finishLevel(4); }, 2000);
   } else { line.classList.add('wrong'); setBugMessage('❌ Это правильная строка!', 'err'); }
 }
-function showBugHelp() { alert('Как играть:\n\n1. Посмотри на картинку сверху — это поле робота.\n2. Прочитай подсказку под картинкой.\n3. Найди в коде строку, из-за которой робот ошибся.\n4. Нажми на неё!'); }
 function setBugMessage(text, type) { const el = document.getElementById('bug-message'); el.textContent = text; el.className = 'game-message ' + (type || ''); }
 
 // ===== 5. ПАЗЛ =====
@@ -782,7 +859,7 @@ function loadCipherRound() {
   const item = words[(cipher.round - 1) % words.length]; cipher.word = item.w; const alphabet = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
   cipher.encoded = item.w.split('').map(char => alphabet[(alphabet.indexOf(char) + 1) % alphabet.length]).join('');
   document.getElementById('cipher-text').textContent = cipher.encoded; document.getElementById('cipher-input').value = '';
-  document.getElementById('cipher-desc').textContent = `Подсказка: это слово означает "${item.d}"`; setCipherMessage('', '');
+  document.getElementById('game-desc').textContent = `Подсказка: это слово означает "${item.d}"`; setCipherMessage('', '');
 }
 function checkCipher() {
   const input = document.getElementById('cipher-input').value.toUpperCase().trim();
