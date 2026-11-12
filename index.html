@@ -8,14 +8,11 @@
 
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
 body {
   font-family: 'Segoe UI', Tahoma, sans-serif;
   background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-  color: #fff; min-height: 100vh;
-  display: flex; flex-direction: column;
+  color: #fff; min-height: 100vh; display: flex; flex-direction: column;
 }
-
 .site-header {
   display: flex; justify-content: space-between; align-items: center;
   padding: 15px 30px; background: rgba(0,0,0,0.3);
@@ -83,7 +80,7 @@ body {
 }
 .author-block b { color: #fff; font-size: 16px; letter-spacing: 1px; }
 
-/* ОБУЧЕНИЕ (ВИКТОРИНА) */
+/* ОБУЧЕНИЕ */
 .learn-strip {
   margin-top: 30px; padding: 20px;
   background: rgba(124,106,255,0.08);
@@ -243,7 +240,28 @@ body {
 .dot-yellow { background: #ffd93d; }
 .dot-gray { background: #666; }
 
-/* БАГ */
+/* БАГ (ОБНОВЛЕННЫЙ) */
+.bug-visual {
+  display: grid; grid-template-columns: repeat(3, 60px);
+  gap: 5px; justify-content: center; margin: 20px auto;
+  padding: 15px; background: rgba(0,0,0,0.3); border-radius: 15px;
+  border: 2px solid rgba(124,106,255,0.4);
+}
+.bug-cell {
+  width: 60px; height: 60px; border-radius: 10px;
+  background: rgba(255,255,255,0.08); display: flex;
+  align-items: center; justify-content: center; font-size: 28px;
+}
+.bug-cell.wall { background: rgba(100,100,100,0.4); border: 1px solid #666; }
+.bug-cell.goal { background: rgba(255,217,61,0.2); border: 1px solid #ffd93d; }
+.bug-cell.robot { background: rgba(46,204,113,0.3); border: 1px solid #2ecc71; }
+
+.bug-hint {
+  font-size: 14px; color: #ffd93d; margin-bottom: 15px;
+  padding: 10px; background: rgba(255,217,61,0.1);
+  border-radius: 10px; border: 1px dashed rgba(255,217,61,0.4);
+}
+
 .code-block {
   background: rgba(0,0,0,0.5); border-radius: 15px; padding: 20px;
   margin: 0 auto 20px; max-width: 500px; border: 2px solid rgba(124,106,255,0.4);
@@ -260,7 +278,7 @@ body {
 
 /* ПАЗЛ */
 .puzzle-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); /* Жестко 3 колонки */
+  display: grid; grid-template-columns: repeat(3, 1fr);
   gap: 8px; justify-content: center; max-width: 250px;
   margin: 20px auto; padding: 15px;
   background: rgba(0,0,0,0.3); border-radius: 15px;
@@ -337,6 +355,8 @@ body {
   .learn-chip { font-size: 12px; padding: 8px 12px; }
   .memory-card { width: 55px; height: 65px; font-size: 24px; }
   .cipher-text { font-size: 20px; letter-spacing: 3px; }
+  .bug-visual { grid-template-columns: repeat(3, 45px); }
+  .bug-cell { width: 45px; height: 45px; font-size: 20px; }
 }
 </style>
 </head>
@@ -355,31 +375,22 @@ body {
 
 <main class="screen active" id="screen-start">
   <h1 class="main-title">DaskQuest</h1>
-  <p class="main-subtitle">
-    IT-квест для детей.<br>
-    Помоги роботу Робику пройти обучение<br>
-    и стать настоящим программистом!
-  </p>
+  <p class="main-subtitle">IT-квест для детей.<br>Помоги роботу Робику пройти обучение<br>и стать настоящим программистом!</p>
   <div class="difficulty-choice">
     <button class="btn btn-easy" onclick="startGame('easy')">🟢 Лёгкий<br><small>7–10 лет</small></button>
     <button class="btn btn-hard" onclick="startGame('hard')">🔴 Сложный<br><small>11–14 лет</small></button>
   </div>
-
   <div class="learn-strip">
     <div class="learn-strip-title">📘 Проверь себя — IT-викторина</div>
     <p class="learn-strip-sub">Выбери тему и ответь на вопрос. За правильный ответ — очки!</p>
     <div class="learn-chips" id="learn-chips"></div>
-    
     <div class="quiz-display" id="quiz-display">
       <div class="quiz-question" id="quiz-question"></div>
       <div class="quiz-options" id="quiz-options"></div>
       <div class="quiz-fact" id="quiz-fact"></div>
     </div>
   </div>
-
-  <div class="author-block">
-    <p>Автор проекта: <b>Егорова Дарья</b></p>
-  </div>
+  <div class="author-block"><p>Автор проекта: <b>Егорова Дарья</b></p></div>
 </main>
 
 <main class="screen" id="screen-map">
@@ -391,355 +402,223 @@ body {
 
 <!-- ИГРА 1 -->
 <main class="screen" id="screen-robot">
-  <div class="game-header">
-    <h2>🔧 Ремонт робота Робика</h2>
-    <div class="game-progress" id="robot-progress">Раунд 1 из 3</div>
-  </div>
+  <div class="game-header"><h2>🔧 Ремонт робота Робика</h2><div class="game-progress" id="robot-progress">Раунд 1 из 3</div></div>
   <p id="robot-desc" class="game-desc">Нажми на деталь, чтобы поставить её в нужный слот.</p>
-  <div class="robot-area">
-    <div class="robot-face" id="robot-face">🤖</div>
-    <div class="slots" id="robot-slots"></div>
-  </div>
+  <div class="robot-area"><div class="robot-face" id="robot-face">🤖</div><div class="slots" id="robot-slots"></div></div>
   <div class="parts" id="robot-parts"></div>
   <div class="game-message" id="robot-message"></div>
-  <div class="game-buttons">
-    <button class="btn" onclick="checkRobot()">✓ Проверить</button>
-    <button class="btn btn-back" onclick="backToMap()">← На карту</button>
-  </div>
+  <div class="game-buttons"><button class="btn" onclick="checkRobot()">✓ Проверить</button><button class="btn btn-back" onclick="backToMap()">← На карту</button></div>
 </main>
 
 <!-- ИГРА 2 -->
 <main class="screen" id="screen-courier">
-  <div class="game-header">
-    <h2>🧭 Робот-курьер</h2>
-    <div class="game-progress" id="courier-progress">Уровень 1 из 1</div>
-  </div>
+  <div class="game-header"><h2>🧭 Робот-курьер</h2><div class="game-progress" id="courier-progress">Уровень 1 из 1</div></div>
   <p id="courier-desc" class="game-desc">Составь программу и нажми «Запуск».</p>
   <div class="grid-board" id="courier-board"></div>
   <div class="program-list" id="courier-program"></div>
   <div class="commands-panel">
-    <button class="cmd-btn" onclick="addCmd('up')">⬆</button>
-    <button class="cmd-btn" onclick="addCmd('down')">⬇</button>
-    <button class="cmd-btn" onclick="addCmd('left')">⬅</button>
-    <button class="cmd-btn" onclick="addCmd('right')">➡</button>
+    <button class="cmd-btn" onclick="addCmd('up')">⬆</button><button class="cmd-btn" onclick="addCmd('down')">⬇</button>
+    <button class="cmd-btn" onclick="addCmd('left')">⬅</button><button class="cmd-btn" onclick="addCmd('right')">➡</button>
   </div>
   <div class="game-message" id="courier-message"></div>
-  <div class="game-buttons">
-    <button class="btn btn-run" onclick="runProgram()">▶ Запуск</button>
-    <button class="btn btn-back" onclick="resetProgram()">↺ Сброс</button>
-    <button class="btn btn-back" onclick="backToMap()">← На карту</button>
-  </div>
+  <div class="game-buttons"><button class="btn btn-run" onclick="runProgram()">▶ Запуск</button><button class="btn btn-back" onclick="resetProgram()">↺ Сброс</button><button class="btn btn-back" onclick="backToMap()">← На карту</button></div>
 </main>
 
 <!-- ИГРА 3 -->
 <main class="screen" id="screen-hacker">
-  <div class="game-header">
-    <h2>🕵️ Взломщик: угадай код</h2>
-    <div class="game-progress" id="hacker-progress">Попытка 1 из 8</div>
-  </div>
-  <p class="game-desc" id="hacker-desc">Хакер загадал 4-значный код. Введи свою догадку — и увидишь, какие цифры угаданы.</p>
-  <div class="legend">
-    <span><span class="dot dot-green"></span>на своём месте</span>
-    <span><span class="dot dot-yellow"></span>есть, но не там</span>
-    <span><span class="dot dot-gray"></span>нет в коде</span>
-  </div>
+  <div class="game-header"><h2>🕵️ Взломщик: угадай код</h2><div class="game-progress" id="hacker-progress">Попытка 1 из 8</div></div>
+  <p class="game-desc" id="hacker-desc">Хакер загадал 4-значный код. Введи догадку.</p>
+  <div class="legend"><span><span class="dot dot-green"></span>на месте</span><span><span class="dot dot-yellow"></span>есть</span><span><span class="dot dot-gray"></span>нет</span></div>
   <div class="code-input" id="hacker-input">
     <input class="code-input-box" maxlength="1" inputmode="numeric" data-i="0">
     <input class="code-input-box" maxlength="1" inputmode="numeric" data-i="1">
     <input class="code-input-box" maxlength="1" inputmode="numeric" data-i="2">
     <input class="code-input-box" maxlength="1" inputmode="numeric" data-i="3">
   </div>
-  <div class="game-buttons">
-    <button class="btn btn-run" onclick="checkHackerCode()">🔍 Проверить</button>
-    <button class="btn btn-back" onclick="backToMap()">← На карту</button>
-  </div>
+  <div class="game-buttons"><button class="btn btn-run" onclick="checkHackerCode()">🔍 Проверить</button><button class="btn btn-back" onclick="backToMap()">← На карту</button></div>
   <div class="game-message" id="hacker-message"></div>
   <div class="attempts-list" id="hacker-attempts"></div>
 </main>
 
-<!-- ИГРА 4 -->
+<!-- ИГРА 4 (ОБНОВЛЕННАЯ) -->
 <main class="screen" id="screen-bug">
-  <div class="game-header">
-    <h2>🐛 Баг в коде</h2>
-    <div class="game-progress" id="bug-progress">Баг 1 из 3</div>
-  </div>
+  <div class="game-header"><h2>🐛 Баг в коде</h2><div class="game-progress" id="bug-progress">Баг 1 из 1</div></div>
   <p class="game-desc">Робот выполнил программу неправильно. Найди строку с ошибкой!</p>
-  <p id="bug-task" class="game-desc"></p>
+  
+  <!-- Визуальная карта -->
+  <div class="bug-visual" id="bug-visual"></div>
+
+  <!-- Подсказка -->
+  <div class="bug-hint" id="bug-hint">Задача: Робот должен дойти до цели 🎯 и сказать «Готово!».</div>
+  
   <div class="code-block" id="bug-code"></div>
   <div class="game-message" id="bug-message"></div>
   <div class="game-buttons">
+    <button class="btn btn-back" onclick="showBugHelp()">❓ Как играть</button>
     <button class="btn btn-back" onclick="backToMap()">← На карту</button>
   </div>
 </main>
 
 <!-- ИГРА 5 -->
 <main class="screen" id="screen-puzzle">
-  <div class="game-header">
-    <h2>🧩 Пятнашки</h2>
-    <div class="game-progress" id="puzzle-progress">Ходы: 0</div>
-  </div>
-  <p class="game-desc">Передвигай фишки, нажимая на них. Собери цифры по порядку от 1 до 8!</p>
+  <div class="game-header"><h2>🧩 Пятнашки</h2><div class="game-progress" id="puzzle-progress">Ходы: 0</div></div>
+  <p class="game-desc">Собери цифры по порядку от 1 до 8!</p>
   <div class="puzzle-grid" id="puzzle-grid"></div>
   <div class="game-message" id="puzzle-message"></div>
-  <div class="game-buttons">
-    <button class="btn btn-back" onclick="startPuzzleGame()">↺ Сброс</button>
-    <button class="btn btn-back" onclick="backToMap()">← На карту</button>
-  </div>
+  <div class="game-buttons"><button class="btn btn-back" onclick="startPuzzleGame()">↺ Сброс</button><button class="btn btn-back" onclick="backToMap()">← На карту</button></div>
 </main>
 
 <!-- ИГРА 6 -->
 <main class="screen" id="screen-memory">
-  <div class="game-header">
-    <h2>🧠 Найди пару</h2>
-    <div class="game-progress" id="memory-progress">Пары: 0 / 4</div>
-  </div>
-  <p class="game-desc">Найди все пары одинаковых IT-эмодзи. Нажимай на карточки, чтобы перевернуть.</p>
+  <div class="game-header"><h2>🧠 Найди пару</h2><div class="game-progress" id="memory-progress">Пары: 0 / 4</div></div>
+  <p class="game-desc">Найди все пары одинаковых IT-эмодзи.</p>
   <div class="memory-grid" id="memory-grid"></div>
   <div class="game-message" id="memory-message"></div>
-  <div class="game-buttons">
-    <button class="btn btn-back" onclick="startMemoryGame()">↺ Сброс</button>
-    <button class="btn btn-back" onclick="backToMap()">← На карту</button>
-  </div>
+  <div class="game-buttons"><button class="btn btn-back" onclick="startMemoryGame()">↺ Сброс</button><button class="btn btn-back" onclick="backToMap()">← На карту</button></div>
 </main>
 
 <!-- ИГРА 7 -->
 <main class="screen" id="screen-cipher">
-  <div class="game-header">
-    <h2>🔤 Расшифруй слово</h2>
-    <div class="game-progress" id="cipher-progress">Шифр 1 из 3</div>
-  </div>
-  <p class="game-desc" id="cipher-desc">Каждая буква сдвинута на 1 шаг вперёд по алфавиту. Расшифруй слово!</p>
+  <div class="game-header"><h2>🔤 Расшифруй слово</h2><div class="game-progress" id="cipher-progress">Шифр 1 из 3</div></div>
+  <p class="game-desc" id="cipher-desc">Каждая буква сдвинута на 1 шаг вперёд по алфавиту.</p>
   <div class="cipher-text" id="cipher-text"></div>
   <input type="text" class="cipher-input" id="cipher-input" placeholder="Введи слово">
   <div class="game-message" id="cipher-message"></div>
-  <div class="game-buttons">
-    <button class="btn btn-run" onclick="checkCipher()">✓ Проверить</button>
-    <button class="btn btn-back" onclick="backToMap()">← На карту</button>
-  </div>
+  <div class="game-buttons"><button class="btn btn-run" onclick="checkCipher()">✓ Проверить</button><button class="btn btn-back" onclick="backToMap()">← На карту</button></div>
 </main>
 
-<footer class="site-footer">
-  <span class="signature">DaskQuest</span> · © 2026 — Егорова Дарья
-</footer>
+<footer class="site-footer"><span class="signature">DaskQuest</span> · © 2026 — Егорова Дарья</footer>
 
 <script>
-// ===== DaskQuest =====
 const game = { difficulty: 'easy', score: 0, unlockedLevels: 7, completedLevels: [] };
-
-// --- ДАННЫЕ ВИКТОРИНЫ ---
 const quizData = [
-  { q: 'Для чего нужен процессор?', o: ['Для хранения фото', 'Для вычислений (это "мозг" ПК)', 'Для вывода звука'], a: 1, fact: 'Процессор выполняет все вычисления в компьютере.' },
-  { q: 'Что произойдёт с оперативной памятью (RAM) при выключении ПК?', o: ['Она очистится', 'Всё сохранится', 'Она станет больше'], a: 0, fact: 'Оперативная память хранит данные только пока ПК включен.' },
-  { q: 'Что такое "баг" в программировании?', o: ['Жук в компьютере', 'Ошибка в коде', 'Новая игра'], a: 1, fact: 'Баг — это ошибка в программе. Их исправляют программисты.' },
-  { q: 'Какой пароль самый надёжный?', o: ['123456', 'Дата рождения', 'P@ssw0rd!_9'], a: 2, fact: 'Хороший пароль длинный, с буквами, цифрами и знаками.' },
-  { q: 'Что такое фишинг?', o: ['Рыбалка в интернете', 'Мошенничество для кражи паролей', 'Игра про рыб'], a: 1, fact: 'Фишинг — это когда мошенники притворяются знакомыми.' },
-  { q: 'Что такое алгоритм?', o: ['Последовательность шагов', 'Музыкальный инструмент', 'Вирус'], a: 0, fact: 'Алгоритм — это четкий план действий для решения задачи.' }
+  { q: 'Для чего нужен процессор?', o: ['Для хранения фото', 'Для вычислений (мозг ПК)', 'Для вывода звука'], a: 1, fact: 'Процессор выполняет все вычисления в компьютере.' },
+  { q: 'Что произойдёт с оперативной памятью при выключении?', o: ['Она очистится', 'Всё сохранится', 'Она станет больше'], a: 0, fact: 'Оперативная память хранит данные только пока ПК включен.' },
+  { q: 'Что такое "баг"?', o: ['Жук в ПК', 'Ошибка в коде', 'Новая игра'], a: 1, fact: 'Баг — это ошибка в программе.' },
+  { q: 'Какой пароль самый надёжный?', o: ['123456', 'Дата рождения', 'P@ssw0rd!_9'], a: 2, fact: 'Хороший пароль длинный, с буквами и знаками.' },
+  { q: 'Что такое фишинг?', o: ['Рыбалка', 'Мошенничество', 'Игра'], a: 1, fact: 'Фишинг — кража паролей через обман.' },
+  { q: 'Что такое алгоритм?', o: ['Последовательность шагов', 'Инструмент', 'Вирус'], a: 0, fact: 'Алгоритм — четкий план действий.' }
 ];
 
 function renderLearnChips() {
-  const chips = document.getElementById('learn-chips');
-  chips.innerHTML = quizData.map((q, i) =>
-    `<div class="learn-chip" data-i="${i}" onclick="startQuiz(${i})">❓ Вопрос ${i+1}</div>`
-  ).join('');
+  document.getElementById('learn-chips').innerHTML = quizData.map((q, i) => `<div class="learn-chip" onclick="startQuiz(${i})">❓ Вопрос ${i+1}</div>`).join('');
 }
-
 function startQuiz(idx) {
   const data = quizData[idx];
   document.querySelectorAll('.learn-chip').forEach(c => c.classList.remove('active'));
-  document.querySelector(`.learn-chip[data-i="${idx}"]`).classList.add('active');
-
-  const disp = document.getElementById('quiz-display');
-  const qText = document.getElementById('quiz-question');
-  const opts = document.getElementById('quiz-options');
-  const fact = document.getElementById('quiz-fact');
-
-  qText.textContent = data.q;
-  fact.classList.remove('show');
-  fact.textContent = '';
-
-  opts.innerHTML = data.o.map((opt, i) =>
-    `<div class="quiz-option" onclick="answerQuiz(${idx}, ${i})">${opt}</div>`
-  ).join('');
-
-  disp.classList.add('show');
+  document.getElementById('quiz-question').textContent = data.q;
+  document.getElementById('quiz-fact').classList.remove('show');
+  document.getElementById('quiz-options').innerHTML = data.o.map((opt, i) => `<div class="quiz-option" onclick="answerQuiz(${idx}, ${i})">${opt}</div>`).join('');
+  document.getElementById('quiz-display').classList.add('show');
 }
-
 function answerQuiz(qIdx, optIdx) {
-  const data = quizData[qIdx];
-  const options = document.querySelectorAll('.quiz-option');
-  
+  const data = quizData[qIdx]; const options = document.querySelectorAll('.quiz-option');
   options.forEach(o => o.style.pointerEvents = 'none');
-  
   if (optIdx === data.a) {
-    options[optIdx].classList.add('correct');
-    game.score += 10; updateScore();
-    const fact = document.getElementById('quiz-fact');
-    fact.textContent = '✅ Верно! +10 очков. ' + data.fact;
-    fact.classList.add('show');
+    options[optIdx].classList.add('correct'); game.score += 10; updateScore();
+    document.getElementById('quiz-fact').textContent = '✅ Верно! +10 очков. ' + data.fact;
   } else {
-    options[optIdx].classList.add('wrong');
-    options[data.a].classList.add('correct');
-    const fact = document.getElementById('quiz-fact');
-    fact.textContent = '❌ Неверно. ' + data.fact;
-    fact.classList.add('show');
+    options[optIdx].classList.add('wrong'); options[data.a].classList.add('correct');
+    document.getElementById('quiz-fact').textContent = '❌ Неверно. ' + data.fact;
   }
+  document.getElementById('quiz-fact').classList.add('show');
 }
 
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
+  document.getElementById(id).classList.add('active'); window.scrollTo(0, 0);
 }
-
 function startGame(diff) {
-  game.difficulty = diff;
-  game.score = 0;
-  game.unlockedLevels = 7;
-  game.completedLevels = [];
+  game.difficulty = diff; game.score = 0; game.unlockedLevels = 7; game.completedLevels = [];
   updateScore(); updateMap(); showScreen('screen-map');
 }
-
 function backToStart() { showScreen('screen-start'); }
 function backToMap() { updateMap(); showScreen('screen-map'); }
-
 function updateScore() { document.getElementById('header-score').textContent = '⭐ ' + game.score; }
-
 function updateMap() {
   document.getElementById('map-difficulty').textContent = game.difficulty === 'easy' ? 'Лёгкий' : 'Сложный';
-  const levels = [
-    { icon: '🔧', name: 'Ремонт' }, { icon: '🧭', name: 'Курьер' },
-    { icon: '🕵️', name: 'Взломщик' }, { icon: '🐛', name: 'Баг' },
-    { icon: '🧩', name: 'Пятнашки' }, { icon: '🧠', name: 'Память' },
-    { icon: '🔤', name: 'Шифр' }
-  ];
-
+  const levels = [{ icon: '🔧', name: 'Ремонт' }, { icon: '🧭', name: 'Курьер' }, { icon: '🕵️', name: 'Взломщик' }, { icon: '🐛', name: 'Баг' }, { icon: '🧩', name: 'Пятнашки' }, { icon: '🧠', name: 'Память' }, { icon: '🔤', name: 'Шифр' }];
   document.getElementById('map-grid').innerHTML = levels.map((l, i) => {
-    const n = i + 1;
-    let status = 'Доступно'; let cls = '';
+    const n = i + 1; let status = 'Доступно'; let cls = '';
     if (game.completedLevels.includes(n)) { status = '✓ Пройдено'; cls = 'done'; }
     else if (n > game.unlockedLevels) { status = '🔒 Закрыто'; cls = 'locked'; }
-    return `<div class="map-level ${cls}" id="lvl-${n}" onclick="openLevel(${n})">
-      <div class="level-icon">${l.icon}</div><div class="level-name">${l.name}</div>
-      <div class="level-status">${status}</div>
-    </div>`;
+    return `<div class="map-level ${cls}" onclick="openLevel(${n})"><div class="level-icon">${l.icon}</div><div class="level-name">${l.name}</div><div class="level-status">${status}</div></div>`;
   }).join('');
 }
-
 function openLevel(n) {
   if (n > game.unlockedLevels) return;
-  if (n === 1) startRobotGame(); else if (n === 2) startCourierGame();
-  else if (n === 3) startHackerGame(); else if (n === 4) startBugGame();
-  else if (n === 5) startPuzzleGame(); else if (n === 6) startMemoryGame();
-  else if (n === 7) startCipherGame();
+  if (n === 1) startRobotGame(); else if (n === 2) startCourierGame(); else if (n === 3) startHackerGame(); else if (n === 4) startBugGame(); else if (n === 5) startPuzzleGame(); else if (n === 6) startMemoryGame(); else if (n === 7) startCipherGame();
 }
-
 function finishLevel(n) {
   if (!game.completedLevels.includes(n)) game.completedLevels.push(n);
   if (game.unlockedLevels < n + 1 && n < 7) game.unlockedLevels = n + 1;
   updateMap(); setTimeout(() => showScreen('screen-map'), 1500);
 }
-
 function shuffle(a) {
-  const arr = [...a];
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  } return arr;
+  const arr = [...a]; for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr;
 }
 
 // ===== 1. РЕМОНТ =====
 let robot = { round: 1, totalRounds: 1, needed: [], placed: [], available: [] };
-function startRobotGame() {
-  robot.round = 1; robot.totalRounds = game.difficulty === 'easy' ? 1 : 3;
-  loadRobotRound(); showScreen('screen-robot');
-}
+function startRobotGame() { robot.round = 1; robot.totalRounds = game.difficulty === 'easy' ? 1 : 3; loadRobotRound(); showScreen('screen-robot'); }
 function loadRobotRound() {
   robot.placed = [];
   if (game.difficulty === 'easy') {
     robot.needed = [{ id: 'cpu', name: '🧠 Процессор' }, { id: 'ram', name: '💾 Память' }, { id: 'bat', name: '🔋 Батарея' }];
-    robot.available = [...robot.needed];
-    document.getElementById('robot-desc').textContent = 'Нажми на деталь, чтобы поставить её в нужный слот. Собери все 3 детали.';
+    robot.available = [...robot.needed]; document.getElementById('robot-desc').textContent = 'Собери все 3 детали.';
   } else {
     const rounds = [
-      { needed: [{ id: 'cpu', name: '🧠 Процессор' }, { id: 'cool', name: '❄️ Кулер' }, { id: 'mb', name: '🔌 Материнка' }], fake: [{ id: 'fake1', name: '🍕 Пицца', fake: true }, { id: 'fake2', name: '🐱 Кот', fake: true }], desc: 'Раунд 1: собери «мозг» робота — процессор, кулер и материнку. Осторожно, есть обманки!' },
-      { needed: [{ id: 'bat', name: '🔋 Батарея 12V' }, { id: 'ram', name: '💾 Память' }, { id: 'gpu', name: '🎮 Видеокарта' }], fake: [{ id: 'bat5', name: '🔋 Батарея 5V', fake: true }, { id: 'fake3', name: '☕ Кофе', fake: true }], desc: 'Раунд 2: питание и картинка. Выбери правильную батарею — 12V, а не 5V!' },
-      { needed: [{ id: 'screen', name: '📺 Экран' }, { id: 'keyb', name: '⌨️ Клавиатура' }, { id: 'mouse', name: '🖱️ Мышь' }], fake: [{ id: 'fake4', name: '🎈 Шарик', fake: true }], desc: 'Раунд 3: подключи устройства ввода-вывода. Робот почти готов!' }
+      { needed: [{ id: 'cpu', name: '🧠 Процессор' }, { id: 'cool', name: '❄️ Кулер' }, { id: 'mb', name: '🔌 Материнка' }], fake: [{ id: 'fake1', name: '🍕 Пицца', fake: true }], desc: 'Собери «мозг» — процессор, кулер и материнку.' },
+      { needed: [{ id: 'bat', name: '🔋 Батарея 12V' }, { id: 'ram', name: '💾 Память' }, { id: 'gpu', name: '🎮 Видеокарта' }], fake: [{ id: 'bat5', name: '🔋 Батарея 5V', fake: true }], desc: 'Выбери правильную батарею — 12V!' },
+      { needed: [{ id: 'screen', name: '📺 Экран' }, { id: 'keyb', name: '⌨️ Клавиатура' }, { id: 'mouse', name: '🖱️ Мышь' }], fake: [{ id: 'fake4', name: '🎈 Шарик', fake: true }], desc: 'Подключи устройства ввода-вывода.' }
     ];
-    const r = rounds[robot.round - 1]; robot.needed = r.needed; robot.available = shuffle([...r.needed, ...r.fake]);
-    document.getElementById('robot-desc').textContent = r.desc;
+    const r = rounds[robot.round - 1]; robot.needed = r.needed; robot.available = shuffle([...r.needed, ...r.fake]); document.getElementById('robot-desc').textContent = r.desc;
   }
-  document.getElementById('robot-progress').textContent = `Раунд ${robot.round} из ${robot.totalRounds}`;
-  renderRobotSlots(); renderRobotParts(); setRobotMessage('', '');
+  document.getElementById('robot-progress').textContent = `Раунд ${robot.round} из ${robot.totalRounds}`; renderRobotSlots(); renderRobotParts(); setRobotMessage('', '');
 }
 function renderRobotSlots() {
-  document.getElementById('robot-slots').innerHTML = robot.needed.map(p => {
-    const filled = robot.placed.includes(p.id);
-    return `<div class="slot ${filled ? 'filled' : ''}" data-id="${p.id}" onclick="removeFromSlot('${p.id}')">${filled ? '✓ ' + p.name : p.name}<small>${filled ? 'стоит' : 'пусто'}</small></div>`;
-  }).join('');
+  document.getElementById('robot-slots').innerHTML = robot.needed.map(p => `<div class="slot ${robot.placed.includes(p.id) ? 'filled' : ''}" onclick="removeFromSlot('${p.id}')">${robot.placed.includes(p.id) ? '✓ ' + p.name : p.name}<small>${robot.placed.includes(p.id) ? 'стоит' : 'пусто'}</small></div>`).join('');
 }
 function renderRobotParts() {
-  document.getElementById('robot-parts').innerHTML = robot.available.map(p => {
-    const used = robot.placed.includes(p.id);
-    return `<div class="part ${p.fake ? 'fake' : ''} ${used ? 'used' : ''}" data-id="${p.id}" onclick="placePart('${p.id}', '${p.name}', ${!!p.fake})">${p.name}</div>`;
-  }).join('');
+  document.getElementById('robot-parts').innerHTML = robot.available.map(p => `<div class="part ${p.fake ? 'fake' : ''} ${robot.placed.includes(p.id) ? 'used' : ''}" onclick="placePart('${p.id}', '${p.name}', ${!!p.fake})">${p.name}</div>`).join('');
 }
 function placePart(id, name, isFake) {
-  if (isFake) { game.score = Math.max(0, game.score - 2); updateScore(); setRobotMessage('❌ Это не деталь компьютера! −2 очка', 'err'); shakeRobot(); return; }
-  if (!robot.needed.find(p => p.id === id)) { setRobotMessage('🤔 Эта деталь здесь не нужна.', 'info'); return; }
+  if (isFake) { game.score = Math.max(0, game.score - 2); updateScore(); setRobotMessage('❌ Не деталь! −2', 'err'); return; }
+  if (!robot.needed.find(p => p.id === id)) { setRobotMessage('🤔 Не нужна.', 'info'); return; }
   if (robot.placed.includes(id)) return;
-  robot.placed.push(id); renderRobotSlots(); renderRobotParts(); setRobotMessage('✓ Поставили: ' + name, 'ok');
+  robot.placed.push(id); renderRobotSlots(); renderRobotParts(); setRobotMessage('✓ Поставили', 'ok');
 }
-function removeFromSlot(id) { robot.placed = robot.placed.filter(x => x !== id); renderRobotSlots(); renderRobotParts(); setRobotMessage('Убрали деталь.', 'info'); }
+function removeFromSlot(id) { robot.placed = robot.placed.filter(x => x !== id); renderRobotSlots(); renderRobotParts(); }
 function checkRobot() {
-  if (!robot.needed.every(p => robot.placed.includes(p.id))) { setRobotMessage('❌ Не все детали на месте!', 'err'); shakeRobot(); return; }
-  const points = game.difficulty === 'easy' ? 10 : 15; game.score += points; updateScore(); happyRobot(); setRobotMessage(`✅ Раунд пройден! +${points} очков`, 'ok');
+  if (!robot.needed.every(p => robot.placed.includes(p.id))) { setRobotMessage('❌ Не все детали!', 'err'); return; }
+  const points = game.difficulty === 'easy' ? 10 : 15; game.score += points; updateScore(); setRobotMessage(`✅ Раунд пройден! +${points}`, 'ok');
   setTimeout(() => { if (robot.round < robot.totalRounds) { robot.round++; loadRobotRound(); } else { finishLevel(1); } }, 1500);
 }
 function setRobotMessage(text, type) { const el = document.getElementById('robot-message'); el.textContent = text; el.className = 'game-message ' + (type || ''); }
-function happyRobot() { const f = document.getElementById('robot-face'); f.classList.remove('sad'); f.classList.add('happy'); setTimeout(() => f.classList.remove('happy'), 1200); }
-function shakeRobot() { const f = document.getElementById('robot-face'); f.classList.remove('happy'); f.classList.add('sad'); setTimeout(() => f.classList.remove('sad'), 600); }
 
 // ===== 2. КУРЬЕР =====
 let courier = { size: 3, robot: {x:0,y:0}, start: {x:0,y:0}, goal: {x:2,y:2}, walls: [], commands: [], maxCommands: 6, level: 1, totalLevels: 1 };
 function startCourierGame() { courier.level = 1; courier.totalLevels = game.difficulty === 'easy' ? 1 : 3; loadCourierLevel(); showScreen('screen-courier'); }
 function loadCourierLevel() {
-  if (game.difficulty === 'easy') {
-    courier.size = 3; courier.start = {x:0, y:0}; courier.goal = {x:2, y:2}; courier.walls = []; courier.maxCommands = 6;
-    document.getElementById('courier-desc').textContent = 'Доведи робота 🤖 до цели 🎯.';
-  } else {
-    const levels = [
-      { size: 3, start: {x:0,y:0}, goal: {x:2,y:2}, walls: [], max: 6 },
-      { size: 4, start: {x:0,y:0}, goal: {x:3,y:3}, walls: [{x:1,y:1},{x:2,y:1}], max: 9 },
-      { size: 5, start: {x:0,y:0}, goal: {x:4,y:4}, walls: [{x:1,y:1},{x:2,y:2},{x:3,y:1}], max: 12 }
-    ];
-    const l = levels[courier.level - 1];
-    courier.size = l.size; courier.start = l.start; courier.goal = l.goal; courier.walls = l.walls; courier.maxCommands = l.max;
-    document.getElementById('courier-desc').textContent = `Уровень ${courier.level}: обойди стены! Максимум команд: ${l.max}.`;
+  if (game.difficulty === 'easy') { courier.size = 3; courier.start = {x:0,y:0}; courier.goal = {x:2,y:2}; courier.walls = []; courier.maxCommands = 6; }
+  else {
+    const levels = [{ size: 3, start: {x:0,y:0}, goal: {x:2,y:2}, walls: [], max: 6 }, { size: 4, start: {x:0,y:0}, goal: {x:3,y:3}, walls: [{x:1,y:1},{x:2,y:1}], max: 9 }, { size: 5, start: {x:0,y:0}, goal: {x:4,y:4}, walls: [{x:1,y:1},{x:2,y:2},{x:3,y:1}], max: 12 }];
+    const l = levels[courier.level - 1]; courier.size = l.size; courier.start = l.start; courier.goal = l.goal; courier.walls = l.walls; courier.maxCommands = l.max;
   }
-  courier.robot = {...courier.start}; courier.commands = [];
-  document.getElementById('courier-progress').textContent = `Уровень ${courier.level} из ${courier.totalLevels}`;
-  renderCourierBoard(); renderCourierProgram(); setCourierMessage('', '');
+  courier.robot = {...courier.start}; courier.commands = []; document.getElementById('courier-progress').textContent = `Уровень ${courier.level} из ${courier.totalLevels}`; renderCourierBoard(); renderCourierProgram(); setCourierMessage('', '');
 }
 function renderCourierBoard() {
-  const board = document.getElementById('courier-board');
-  board.style.gridTemplateColumns = `repeat(${courier.size}, 60px)`;
-  let html = '';
-  for (let y = 0; y < courier.size; y++) {
-    for (let x = 0; x < courier.size; x++) {
-      let cls = 'cell', content = '';
-      if (courier.walls.some(w => w.x === x && w.y === y)) { cls += ' wall'; content = '🧱'; }
-      if (x === courier.goal.x && y === courier.goal.y) { cls += ' goal'; content = '🎯'; }
-      if (x === courier.robot.x && y === courier.robot.y) { cls += ' robot'; content = '🤖'; }
-      html += `<div class="${cls}">${content}</div>`;
-    }
-  }
-  board.innerHTML = html;
+  const board = document.getElementById('courier-board'); board.style.gridTemplateColumns = `repeat(${courier.size}, 60px)`; let html = '';
+  for (let y = 0; y < courier.size; y++) for (let x = 0; x < courier.size; x++) {
+    let cls = 'cell', content = '';
+    if (courier.walls.some(w => w.x === x && w.y === y)) { cls += ' wall'; content = '🧱'; }
+    if (x === courier.goal.x && y === courier.goal.y) { cls += ' goal'; content = '🎯'; }
+    if (x === courier.robot.x && y === courier.robot.y) { cls += ' robot'; content = '🤖'; }
+    html += `<div class="${cls}">${content}</div>`;
+  } board.innerHTML = html;
 }
-function renderCourierProgram() {
-  const arrows = {up:'⬆', down:'⬇', left:'⬅', right:'➡'};
-  document.getElementById('courier-program').innerHTML = courier.commands.map(c => `<div class="program-cmd">${arrows[c]}</div>`).join('') || '<span style="color:#666">Программа пуста</span>';
-}
-function addCmd(dir) { if (courier.commands.length >= courier.maxCommands) { setCourierMessage('⚠️ Лимит команд!', 'info'); return; } courier.commands.push(dir); renderCourierProgram(); setCourierMessage('', ''); }
+function renderCourierProgram() { const arrows = {up:'⬆', down:'⬇', left:'⬅', right:'➡'}; document.getElementById('courier-program').innerHTML = courier.commands.map(c => `<div class="program-cmd">${arrows[c]}</div>`).join('') || '<span style="color:#666">Пусто</span>'; }
+function addCmd(dir) { if (courier.commands.length >= courier.maxCommands) return; courier.commands.push(dir); renderCourierProgram(); setCourierMessage('', ''); }
 function resetProgram() { courier.robot = {...courier.start}; courier.commands = []; renderCourierBoard(); renderCourierProgram(); setCourierMessage('', ''); }
 function runProgram() {
   if (courier.commands.length === 0) { setCourierMessage('🤔 Добавь команды!', 'info'); return; }
@@ -756,14 +635,13 @@ function runProgram() {
     if (i < steps.length) { courier.robot = steps[i]; renderCourierBoard(); i++; setTimeout(animate, 300); }
     else {
       courier.robot = {x, y}; renderCourierBoard();
-      if (crashed) { setCourierMessage('💥 Врезался!', 'err'); }
+      if (crashed) setCourierMessage('💥 Врезался!', 'err');
       else if (x === courier.goal.x && y === courier.goal.y) {
         const points = game.difficulty === 'easy' ? 10 : 15; game.score += points; updateScore(); setCourierMessage(`✅ Дошёл! +${points}`, 'ok');
-        setTimeout(() => { if (courier.level < courier.totalLevels) { courier.level++; loadCourierLevel(); } else { finishLevel(2); } }, 1500);
-      } else { setCourierMessage('🤔 Не дошёл.', 'info'); }
+        setTimeout(() => { if (courier.level < courier.totalLevels) { courier.level++; loadCourierLevel(); } else finishLevel(2); }, 1500);
+      } else setCourierMessage('🤔 Не дошёл.', 'info');
     }
-  };
-  animate();
+  }; animate();
 }
 function setCourierMessage(text, type) { const el = document.getElementById('courier-message'); el.textContent = text; el.className = 'game-message ' + (type || ''); }
 
@@ -772,70 +650,76 @@ let hacker = { secret: [], attempts: [], maxAttempts: 8 };
 function startHackerGame() {
   hacker.secret = []; for (let i = 0; i < 4; i++) hacker.secret.push(Math.floor(Math.random() * 10));
   hacker.attempts = []; hacker.maxAttempts = game.difficulty === 'easy' ? 8 : 6;
-  document.getElementById('hacker-progress').textContent = `Попытка 1 из ${hacker.maxAttempts}`;
-  document.getElementById('hacker-attempts').innerHTML = ''; document.getElementById('hacker-message').textContent = '';
-  document.querySelectorAll('.code-input-box').forEach(inp => { inp.value = ''; inp.disabled = false; });
-  document.querySelector('.code-input-box[data-i="0"]').focus(); showScreen('screen-hacker');
+  document.getElementById('hacker-progress').textContent = `Попытка 1 из ${hacker.maxAttempts}`; document.getElementById('hacker-attempts').innerHTML = ''; document.getElementById('hacker-message').textContent = '';
+  document.querySelectorAll('.code-input-box').forEach(inp => { inp.value = ''; inp.disabled = false; }); document.querySelector('.code-input-box[data-i="0"]').focus(); showScreen('screen-hacker');
 }
-document.addEventListener('input', e => {
-  if (!e.target.classList.contains('code-input-box')) return;
-  e.target.value = e.target.value.replace(/\D/g, '');
-  const i = parseInt(e.target.dataset.i);
-  if (e.target.value && i < 3) document.querySelector(`.code-input-box[data-i="${i+1}"]`).focus();
-});
+document.addEventListener('input', e => { if (!e.target.classList.contains('code-input-box')) return; e.target.value = e.target.value.replace(/\D/g, ''); const i = parseInt(e.target.dataset.i); if (e.target.value && i < 3) document.querySelector(`.code-input-box[data-i="${i+1}"]`).focus(); });
 document.addEventListener('keydown', e => { if (e.key === 'Enter' && document.getElementById('screen-hacker').classList.contains('active')) checkHackerCode(); });
 function checkHackerCode() {
   const inputs = document.querySelectorAll('.code-input-box'); const guess = [];
   for (const inp of inputs) { if (inp.value === '') { setHackerMessage('⚠️ Заполни цифры!', 'info'); return; } guess.push(parseInt(inp.value)); }
   const result = []; const secretCopy = [...hacker.secret]; const guessCopy = [...guess];
-  for (let i = 0; i < 4; i++) { if (guessCopy[i] === secretCopy[i]) { result[i] = 'green'; secretCopy[i] = null; guessCopy[i] = null; } else { result[i] = null; } }
-  for (let i = 0; i < 4; i++) { if (guessCopy[i] === null) continue; const idx = secretCopy.indexOf(guessCopy[i]); if (idx !== -1) { result[i] = 'yellow'; secretCopy[idx] = null; } else { result[i] = 'gray'; } }
-  hacker.attempts.push({ guess: [...guess], result: [...result] });
-  renderHackerAttempts();
+  for (let i = 0; i < 4; i++) { if (guessCopy[i] === secretCopy[i]) { result[i] = 'green'; secretCopy[i] = null; guessCopy[i] = null; } else result[i] = null; }
+  for (let i = 0; i < 4; i++) { if (guessCopy[i] === null) continue; const idx = secretCopy.indexOf(guessCopy[i]); if (idx !== -1) { result[i] = 'yellow'; secretCopy[idx] = null; } else result[i] = 'gray'; }
+  hacker.attempts.push({ guess: [...guess], result: [...result] }); renderHackerAttempts();
   if (result.every(r => r === 'green')) {
-    const points = game.difficulty === 'easy' ? 20 : 30; game.score += points; updateScore();
-    setHackerMessage(`🎉 Взломан! +${points}`, 'ok'); document.querySelectorAll('.code-input-box').forEach(inp => inp.disabled = true);
-    setTimeout(() => finishLevel(3), 2000); return;
+    const points = game.difficulty === 'easy' ? 20 : 30; game.score += points; updateScore(); setHackerMessage(`🎉 Взломан! +${points}`, 'ok'); document.querySelectorAll('.code-input-box').forEach(inp => inp.disabled = true); setTimeout(() => finishLevel(3), 2000); return;
   }
-  if (hacker.attempts.length >= hacker.maxAttempts) {
-    setHackerMessage(`💥 Конец! Код: ${hacker.secret.join('')}`, 'err'); document.querySelectorAll('.code-input-box').forEach(inp => inp.disabled = true);
-    setTimeout(() => startHackerGame(), 3000); return;
-  }
-  document.getElementById('hacker-progress').textContent = `Попытка ${hacker.attempts.length + 1} из ${hacker.maxAttempts}`;
-  setHackerMessage('Попробуй ещё!', 'info'); document.querySelectorAll('.code-input-box').forEach(inp => inp.value = '');
-  document.querySelector('.code-input-box[data-i="0"]').focus();
+  if (hacker.attempts.length >= hacker.maxAttempts) { setHackerMessage(`💥 Конец! Код: ${hacker.secret.join('')}`, 'err'); document.querySelectorAll('.code-input-box').forEach(inp => inp.disabled = true); setTimeout(() => startHackerGame(), 3000); return; }
+  document.getElementById('hacker-progress').textContent = `Попытка ${hacker.attempts.length + 1} из ${hacker.maxAttempts}`; setHackerMessage('Ещё раз!', 'info'); document.querySelectorAll('.code-input-box').forEach(inp => inp.value = ''); document.querySelector('.code-input-box[data-i="0"]').focus();
 }
-function renderHackerAttempts() {
-  document.getElementById('hacker-attempts').innerHTML = hacker.attempts.map(att => `<div class="attempt-row">${att.guess.map((d, i) => `<div class="attempt-digit ${att.result[i]}">${d}</div>`).join('')}</div>`).join('');
-}
+function renderHackerAttempts() { document.getElementById('hacker-attempts').innerHTML = hacker.attempts.map(att => `<div class="attempt-row">${att.guess.map((d, i) => `<div class="attempt-digit ${att.result[i]}">${d}</div>`).join('')}</div>`).join(''); }
 function setHackerMessage(text, type) { const el = document.getElementById('hacker-message'); el.textContent = text; el.className = 'game-message ' + (type || ''); }
 
-// ===== 4. БАГ =====
-let bug = { round: 1, totalRounds: 1 };
+// ===== 4. БАГ (НОВЫЙ) =====
+let bug = { round: 1, totalRounds: 3 };
 function startBugGame() { bug.round = 1; bug.totalRounds = game.difficulty === 'easy' ? 1 : 3; loadBugRound(); showScreen('screen-bug'); }
+
 function loadBugRound() {
   document.getElementById('bug-progress').textContent = `Баг ${bug.round} из ${bug.totalRounds}`;
-  let task, lines, bugIndex;
-  if (bug.round === 1 || game.difficulty === 'easy') {
-    task = '🤖 Робот должен дойти и сказать «Готово!». Где ошибка?'; lines = ['шаг вперёд', 'шаг вперёд', 'поверни налево', 'шаг вперёд', 'скажи «Готово!»']; bugIndex = 2;
+  let lines, bugIndex, visualHTML, hintText;
+
+  if (bug.round === 1) {
+    hintText = 'Робот должен дойти до 🎯. Он шагнул вперёд и повернул НЕ ТУДА, поэтому врезался в стену.';
+    visualHTML = `
+      <div class="bug-cell"></div><div class="bug-cell goal">🎯</div><div class="bug-cell wall">🧱</div>
+      <div class="bug-cell"></div><div class="bug-cell"></div><div class="bug-cell wall">🧱</div>
+      <div class="bug-cell robot">🤖</div><div class="bug-cell"></div><div class="bug-cell wall">🧱</div>
+    `;
+    lines = ['шаг вперёд', 'шаг вперёд', 'поверни налево', 'шаг вперёд', 'скажи «Готово!»'];
+    bugIndex = 2;
   } else if (bug.round === 2) {
-    task = '🤖 Робот должен посчитать от 1 до 3. Где ошибка?'; lines = ['счёт = 0', 'пока счёт < 3:', '   счёт = счёт + 1', '   скажи счёт', 'скажи «Готово!»']; bugIndex = 3;
+    hintText = 'Робот должен посчитать от 1 до 3. Но он выводит числа на экран дважды. Найди лишнюю команду.';
+    visualHTML = `<div style="font-size:30px; padding: 20px;">1, 1, 2, 2, 3, 3</div>`;
+    lines = ['счёт = 0', 'пока счёт < 3:', '   счёт = счёт + 1', '   скажи счёт', '   скажи счёт', 'скажи «Готово!»'];
+    bugIndex = 4;
   } else {
-    task = '🤖 Робот должен идти до стены. Где ошибка?'; lines = ['пока впереди стена:', '   шаг вперёд', 'скажи «Стена!»']; bugIndex = 0;
+    hintText = 'Робот должен идти, ПОКА НЕ встретит стену. Но он стоит на месте. Ошибка в условии цикла.';
+    visualHTML = `
+      <div class="bug-cell"></div><div class="bug-cell"></div><div class="bug-cell"></div>
+      <div class="bug-cell"></div><div class="bug-cell"></div><div class="bug-cell"></div>
+      <div class="bug-cell robot">🤖</div><div class="bug-cell"></div><div class="bug-cell wall">🧱</div>
+    `;
+    lines = ['пока впереди стена:', '   шаг вперёд', 'скажи «Стена!»'];
+    bugIndex = 0;
   }
-  bug.bugIndex = bugIndex; document.getElementById('bug-task').textContent = task;
+
+  bug.bugIndex = bugIndex;
+  document.getElementById('bug-hint').textContent = '💡 ' + hintText;
+  document.getElementById('bug-visual').innerHTML = visualHTML;
   document.getElementById('bug-code').innerHTML = lines.map((line, i) => `<div class="code-line" data-i="${i}" onclick="chooseBugLine(${i})">${line}</div>`).join('');
   setBugMessage('', '');
 }
+
 function chooseBugLine(i) {
   const line = document.querySelector(`.code-line[data-i="${i}"]`);
   if (line.classList.contains('correct') || line.classList.contains('wrong')) return;
   if (i === bug.bugIndex) {
-    line.classList.add('correct'); const points = game.difficulty === 'easy' ? 10 : 15; game.score += points; updateScore();
-    setBugMessage(`✅ Верно! +${points}`, 'ok');
-    setTimeout(() => { if (bug.round < bug.totalRounds) { bug.round++; loadBugRound(); } else { finishLevel(4); } }, 1800);
+    line.classList.add('correct'); const points = game.difficulty === 'easy' ? 10 : 15; game.score += points; updateScore(); setBugMessage(`✅ Верно! +${points}`, 'ok');
+    setTimeout(() => { if (bug.round < bug.totalRounds) { bug.round++; loadBugRound(); } else finishLevel(4); }, 2000);
   } else { line.classList.add('wrong'); setBugMessage('❌ Это правильная строка!', 'err'); }
 }
+function showBugHelp() { alert('Как играть:\n\n1. Посмотри на картинку сверху — это поле робота.\n2. Прочитай подсказку под картинкой.\n3. Найди в коде строку, из-за которой робот ошибся.\n4. Нажми на неё!'); }
 function setBugMessage(text, type) { const el = document.getElementById('bug-message'); el.textContent = text; el.className = 'game-message ' + (type || ''); }
 
 // ===== 5. ПАЗЛ =====
@@ -844,10 +728,8 @@ function startPuzzleGame() {
   puzzle.board = [1,2,3,4,5,6,7,8,0];
   for(let i=0; i<100; i++) {
     let emptyIdx = puzzle.board.indexOf(0); let possible = [];
-    if (emptyIdx > 2) possible.push(emptyIdx - 3);
-    if (emptyIdx < 6) possible.push(emptyIdx + 3);
-    if (emptyIdx % 3 > 0) possible.push(emptyIdx - 1);
-    if (emptyIdx % 3 < 2) possible.push(emptyIdx + 1);
+    if (emptyIdx > 2) possible.push(emptyIdx - 3); if (emptyIdx < 6) possible.push(emptyIdx + 3);
+    if (emptyIdx % 3 > 0) possible.push(emptyIdx - 1); if (emptyIdx % 3 < 2) possible.push(emptyIdx + 1);
     let rand = possible[Math.floor(Math.random()*possible.length)];
     puzzle.board[emptyIdx] = puzzle.board[rand]; puzzle.board[rand] = 0;
   }
@@ -855,10 +737,7 @@ function startPuzzleGame() {
 }
 function renderPuzzle() {
   document.getElementById('puzzle-progress').textContent = `Ходы: ${puzzle.moves}`;
-  document.getElementById('puzzle-grid').innerHTML = puzzle.board.map((val, i) => {
-    if (val === 0) return `<div class="puzzle-piece empty"></div>`;
-    return `<div class="puzzle-piece" onclick="movePuzzle(${i})">${val}</div>`;
-  }).join('');
+  document.getElementById('puzzle-grid').innerHTML = puzzle.board.map((val, i) => val === 0 ? `<div class="puzzle-piece empty"></div>` : `<div class="puzzle-piece" onclick="movePuzzle(${i})">${val}</div>`).join('');
 }
 function movePuzzle(idx) {
   let emptyIdx = puzzle.board.indexOf(0); let valid = false;
@@ -867,21 +746,14 @@ function movePuzzle(idx) {
   if (idx + 1 === emptyIdx && Math.floor(idx/3) === Math.floor(emptyIdx/3)) valid = true;
   if (valid) { puzzle.board[emptyIdx] = puzzle.board[idx]; puzzle.board[idx] = 0; puzzle.moves++; renderPuzzle(); checkPuzzleWin(); }
 }
-function checkPuzzleWin() {
-  if (puzzle.board.every((val, i) => val === (i + 1) % 9)) {
-    game.score += 25; updateScore(); setPuzzleMessage('🎉 Собрано! +25', 'ok');
-    setTimeout(() => finishLevel(5), 2000);
-  }
-}
+function checkPuzzleWin() { if (puzzle.board.every((val, i) => val === (i + 1) % 9)) { game.score += 25; updateScore(); setPuzzleMessage('🎉 Собрано! +25', 'ok'); setTimeout(() => finishLevel(5), 2000); } }
 function setPuzzleMessage(text, type) { const el = document.getElementById('puzzle-message'); el.textContent = text; el.className = 'game-message ' + (type || ''); }
 
 // ===== 6. ПАМЯТЬ =====
 let memory = { cards: [], flipped: [], matched: 0, pairs: 4, lock: false };
 function startMemoryGame() {
-  memory.pairs = game.difficulty === 'easy' ? 4 : 6;
-  let emojis = ['💻', '🖥️', '💾', '⌨️', '🖱️', '🖨️'].slice(0, memory.pairs);
-  memory.cards = shuffle([...emojis, ...emojis]);
-  memory.flipped = []; memory.matched = 0; memory.lock = false;
+  memory.pairs = game.difficulty === 'easy' ? 4 : 6; let emojis = ['💻', '🖥️', '💾', '⌨️', '🖱️', '🖨️'].slice(0, memory.pairs);
+  memory.cards = shuffle([...emojis, ...emojis]); memory.flipped = []; memory.matched = 0; memory.lock = false;
   document.getElementById('memory-grid').style.gridTemplateColumns = `repeat(4, 70px)`;
   renderMemory(); setMemoryMessage('', ''); showScreen('screen-memory');
 }
@@ -889,23 +761,15 @@ function renderMemory() {
   document.getElementById('memory-progress').textContent = `Пары: ${memory.matched} / ${memory.pairs}`;
   document.getElementById('memory-grid').innerHTML = memory.cards.map((emoji, i) => {
     const isFlipped = memory.flipped.includes(i); const isMatched = memory.cards[i] === null;
-    return `<div class="memory-card ${isFlipped ? 'flipped' : ''} ${isMatched ? 'matched' : ''}" onclick="flipMemory(${i})">
-      ${isMatched || isFlipped ? emoji : '❓'}</div>`;
+    return `<div class="memory-card ${isFlipped ? 'flipped' : ''} ${isMatched ? 'matched' : ''}" onclick="flipMemory(${i})">${isMatched || isFlipped ? emoji : '❓'}</div>`;
   }).join('');
 }
-function flipMemory(idx) {
-  if (memory.lock || memory.flipped.includes(idx) || memory.cards[idx] === null) return;
-  memory.flipped.push(idx); renderMemory();
-  if (memory.flipped.length === 2) { memory.lock = true; setTimeout(checkMemory, 800); }
-}
+function flipMemory(idx) { if (memory.lock || memory.flipped.includes(idx) || memory.cards[idx] === null) return; memory.flipped.push(idx); renderMemory(); if (memory.flipped.length === 2) { memory.lock = true; setTimeout(checkMemory, 800); } }
 function checkMemory() {
   const [i1, i2] = memory.flipped;
   if (memory.cards[i1] === memory.cards[i2]) { memory.cards[i1] = null; memory.cards[i2] = null; memory.matched++; }
   memory.flipped = []; memory.lock = false; renderMemory();
-  if (memory.matched === memory.pairs) {
-    const points = game.difficulty === 'easy' ? 15 : 25; game.score += points; updateScore();
-    setMemoryMessage(`🎉 Победа! +${points}`, 'ok'); setTimeout(() => finishLevel(6), 2000);
-  }
+  if (memory.matched === memory.pairs) { const points = game.difficulty === 'easy' ? 15 : 25; game.score += points; updateScore(); setMemoryMessage(`🎉 Победа! +${points}`, 'ok'); setTimeout(() => finishLevel(6), 2000); }
 }
 function setMemoryMessage(text, type) { const el = document.getElementById('memory-message'); el.textContent = text; el.className = 'game-message ' + (type || ''); }
 
@@ -914,22 +778,18 @@ let cipher = { round: 1, totalRounds: 1, word: '', encoded: '' };
 function startCipherGame() { cipher.round = 1; cipher.totalRounds = game.difficulty === 'easy' ? 1 : 3; loadCipherRound(); showScreen('screen-cipher'); }
 function loadCipherRound() {
   document.getElementById('cipher-progress').textContent = `Шифр ${cipher.round} из ${cipher.totalRounds}`;
-  const words = [{ w: 'БАЙТ', d: 'Единица информации' }, { w: 'КОД', d: 'Набор команд' }, { w: 'СЕТЬ', d: 'Соединение компьютеров' }, { w: 'ДИСК', d: 'Хранилище данных' }, { w: 'ПОРТ', d: 'Разъём для подключения' }];
-  const item = words[(cipher.round - 1) % words.length];
-  cipher.word = item.w; const alphabet = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
+  const words = [{ w: 'БАЙТ', d: 'Единица информации' }, { w: 'КОД', d: 'Набор команд' }, { w: 'СЕТЬ', d: 'Соединение ПК' }, { w: 'ДИСК', d: 'Хранилище' }, { w: 'ПОРТ', d: 'Разъём' }];
+  const item = words[(cipher.round - 1) % words.length]; cipher.word = item.w; const alphabet = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
   cipher.encoded = item.w.split('').map(char => alphabet[(alphabet.indexOf(char) + 1) % alphabet.length]).join('');
-  document.getElementById('cipher-text').textContent = cipher.encoded;
-  document.getElementById('cipher-input').value = '';
-  document.getElementById('cipher-desc').textContent = `Подсказка: это слово означает "${item.d}"`;
-  setCipherMessage('', '');
+  document.getElementById('cipher-text').textContent = cipher.encoded; document.getElementById('cipher-input').value = '';
+  document.getElementById('cipher-desc').textContent = `Подсказка: это слово означает "${item.d}"`; setCipherMessage('', '');
 }
 function checkCipher() {
   const input = document.getElementById('cipher-input').value.toUpperCase().trim();
   if (input === cipher.word) {
-    const points = game.difficulty === 'easy' ? 15 : 25; game.score += points; updateScore();
-    setCipherMessage(`✅ Верно! +${points}`, 'ok');
-    setTimeout(() => { if (cipher.round < cipher.totalRounds) { cipher.round++; loadCipherRound(); } else { finishLevel(7); } }, 1500);
-  } else { setCipherMessage('❌ Неправильно. Попробуй ещё!', 'err'); }
+    const points = game.difficulty === 'easy' ? 15 : 25; game.score += points; updateScore(); setCipherMessage(`✅ Верно! +${points}`, 'ok');
+    setTimeout(() => { if (cipher.round < cipher.totalRounds) { cipher.round++; loadCipherRound(); } else finishLevel(7); }, 1500);
+  } else setCipherMessage('❌ Неправильно!', 'err');
 }
 function setCipherMessage(text, type) { const el = document.getElementById('cipher-message'); el.textContent = text; el.className = 'game-message ' + (type || ''); }
 
@@ -937,6 +797,5 @@ function setCipherMessage(text, type) { const el = document.getElementById('ciph
 renderLearnChips();
 console.log('%c DaskQuest %c by Dask ', 'background:#7c6aff;color:#fff;font-weight:bold;padding:4px 8px;border-radius:4px 0 0 4px;', 'background:#24243e;color:#7c6aff;font-style:italic;padding:4px 8px;border-radius:0 4px 4px 0;');
 </script>
-
 </body>
 </html>
